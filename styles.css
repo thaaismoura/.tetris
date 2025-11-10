@@ -13,7 +13,9 @@ body{
     radial-gradient(1200px 800px at 10% 10%, rgba(124,58,237,.18), transparent 60%),
     radial-gradient(1200px 800px at 100% 0%, rgba(14,165,233,.15), transparent 60%),
     var(--bg);
-  display:flex; align-items:center; justify-content:center; padding:18px;
+  display:flex; align-items:flex-start; justify-content:center;
+  /* reserva espaço p/ a dock de controles no mobile */
+  padding:18px 18px calc(170px + env(safe-area-inset-bottom, 0px));
 }
 .wrap{width:min(100%,1100px); display:grid; gap:16px; grid-template-columns:1fr;}
 .title{display:flex; align-items:center; justify-content:center; gap:10px; opacity:.9}
@@ -21,8 +23,12 @@ body{
 .grid{display:grid; gap:14px; grid-template-columns:1fr;}
 @media (min-width:940px){ .grid{ grid-template-columns:270px 1fr 220px; align-items:start } }
 
-.card{ background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.02));
-  border:1px solid rgba(255,255,255,.08); border-radius:var(--radius); box-shadow:var(--shadow); }
+.card{
+  background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.02));
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+}
 .panel{ padding:14px }
 .panel h3{ font-size:14px; margin:0 0 8px; color:var(--muted); font-weight:700; letter-spacing:.2px }
 .tiny{ font-size:13px; opacity:.9 }
@@ -31,14 +37,23 @@ body{
 .stat .k{ font-size:12px; color:var(--muted) }
 .stat .v{ font-size:18px; font-weight:800 }
 
-/* Área de jogo */
+/* Área de jogo MENOR e centralizada */
 .stage{
   position:relative; overflow:hidden; border-radius:var(--radius);
   background:linear-gradient(180deg, rgba(2,6,23,.7), rgba(2,6,23,.4));
   border:1px solid rgba(255,255,255,.08);
   display:flex; align-items:center; justify-content:center;
+  margin:0 auto;
+  max-width:min(92vw, 360px);           /* limita largura no mobile */
 }
-#game{ display:block; width:100%; height:auto; image-rendering:pixelated }
+#game{
+  display:block; width:100%; height:auto; image-rendering:pixelated;
+  max-height:56vh;                      /* limita altura no mobile */
+}
+@media (min-width:940px){
+  .stage{ max-width:360px; }
+  #game{ max-height:640px; }
+}
 
 /* Botão começar central */
 .overlay-center{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; pointer-events:none; }
@@ -49,20 +64,30 @@ body{
   font-size:clamp(16px, 2.6vw, 20px); cursor:pointer;
 }
 
-/* Próxima peça (mini) */
+/* Próxima peça (bem pequena) */
 .next-wrap{ display:flex; align-items:center; gap:10px }
-.next-canvas{ width:64px; height:64px; border-radius:12px; border:1px solid rgba(255,255,255,.08); background:rgba(255,255,255,.03) }
+.next-canvas{ width:48px; height:48px; border-radius:12px; border:1px solid rgba(255,255,255,.08); background:rgba(255,255,255,.03) }
 
-/* Controles grandes (mobile) */
+/* --------- CONTROLES FIXOS NO RODAPÉ --------- */
+.controls-dock{
+  position:fixed; left:12px; right:12px;
+  bottom:calc(10px + env(safe-area-inset-bottom, 0px));
+  backdrop-filter: blur(6px);
+  background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.03));
+  z-index:50; padding:10px;
+}
+.hint{ font-size:12px; color:var(--muted); text-align:center; padding-bottom:6px; margin:0 }
+
+/* Controles grandes (cabendo no mobile) */
 .controls{
   display:grid; grid-template-areas:
   ". up ."
   "left drop right"
   ". down .";
-  gap:10px; justify-items:center; padding:14px
+  gap:10px; justify-items:center; padding:6px
 }
 .controls button{
-  width:100%; max-width:120px; height:64px; font-size:18px; font-weight:800; border:none; border-radius:16px;
+  width:100%; max-width:120px; height:56px; font-size:18px; font-weight:800; border:none; border-radius:16px;
   background:linear-gradient(135deg, rgba(125,211,252,.25), rgba(167,139,250,.25)); color:var(--text);
   border:1px solid rgba(255,255,255,.12); box-shadow:var(--shadow); cursor:pointer
 }
@@ -71,8 +96,6 @@ body{
   .controls{ grid-template-columns:repeat(3,1fr); grid-template-areas:"left up right" "drop down down" }
   .controls button{ height:56px }
 }
-
-.hint{ font-size:12px; color:var(--muted); text-align:center; padding-bottom:6px }
 
 /* Fim de jogo */
 .gameover{
