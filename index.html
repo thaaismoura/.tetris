@@ -29,10 +29,12 @@
     <main class="stage card">
       <canvas id="game" width="300" height="600"></canvas>
 
+      <!-- Botão de início central -->
       <div class="overlay-center" id="overlayStart">
         <button class="start-btn" id="btnStart">Começar</button>
       </div>
 
+      <!-- Fim de jogo -->
       <div class="gameover" id="overlayGO">
         <div class="go-card">
           <h2>Fim de jogo</h2>
@@ -55,68 +57,7 @@
     </div>
   </nav>
 
+  <!-- Importa o script JS principal -->
   <script src="game.js"></script>
-
-  <!-- Script de ajuste e modo maximizado -->
-  <script>
-    function getViewport() {
-      const vv = window.visualViewport;
-      return { w: vv ? vv.width : window.innerWidth, h: vv ? vv.height : window.innerHeight };
-    }
-
-    function resizeCanvas() {
-      const { w: vw, h: vh } = getViewport();
-      const body = document.body;
-      const title = document.querySelector('.title');
-      const info = document.querySelector('.info-panel');
-      const dock = document.querySelector('.controls-dock');
-      const stage = document.querySelector('.stage');
-      const canvas = document.getElementById('game');
-
-      const titleH = title.getBoundingClientRect().height || 0;
-      const infoH = body.classList.contains('playing') ? 0 : (info?.getBoundingClientRect().height || 0);
-      const dockH = dock.getBoundingClientRect().height || 130;
-      const gaps = 24;
-
-      const availableH = vh - (titleH + infoH + dockH + gaps);
-      const columnW = Math.min(vw, 540);
-      const maxW = columnW - 32;
-      let targetW = Math.min(maxW, availableH / 2);
-      targetW = Math.max(220, Math.min(360, targetW));
-      const targetH = targetW * 2;
-
-      canvas.style.width = targetW + 'px';
-      canvas.style.height = targetH + 'px';
-      stage.style.maxWidth = (targetW + 16) + 'px';
-    }
-
-    function setupResize() {
-      resizeCanvas();
-      if (window.visualViewport) {
-        visualViewport.addEventListener('resize', resizeCanvas);
-        visualViewport.addEventListener('scroll', resizeCanvas);
-      }
-      window.addEventListener('resize', resizeCanvas);
-      window.addEventListener('orientationchange', resizeCanvas);
-    }
-
-    window.addEventListener('load', () => {
-      const btnStart = document.getElementById('btnStart');
-      const btnAgain = document.getElementById('btnAgain');
-
-      btnStart.addEventListener('click', () => {
-        document.body.classList.add('playing');
-        document.querySelector('.info-panel').style.display = 'none';
-        resizeCanvas();
-      });
-
-      btnAgain.addEventListener('click', () => {
-        document.getElementById('overlayGO').classList.remove('show');
-        resizeCanvas();
-      });
-
-      setupResize();
-    });
-  </script>
 </body>
 </html>
