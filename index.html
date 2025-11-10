@@ -10,7 +10,7 @@
   <div class="wrap">
     <h1 class="title">Tetris – responsivo e estiloso</h1>
 
-    <!-- Painel de informações (igual estilo, só menor) -->
+    <!-- Painel de informações (mesmo estilo, só menor) -->
     <section class="card panel info-panel" aria-label="Informações do jogo">
       <h3>Info</h3>
       <p class="tiny">Use os botões (mobile) ou o teclado: ← → ↓ mover, ↑ girar, Espaço queda.</p>
@@ -24,13 +24,13 @@
 
       <div class="next-box">
         <span class="tiny">Próxima</span>
-        <canvas id="next" class="next-canvas" width="40" height="40" aria-hidden="true"></canvas>
+        <canvas id="next" class="next-canvas" width="32" height="32" aria-hidden="true"></canvas>
       </div>
     </section>
 
     <!-- Área de jogo -->
     <main class="stage card" aria-label="Área de jogo">
-      <!-- Canvas 10x20 (300x600). O CSS escala mantendo proporção -->
+      <!-- Canvas 10x20 (proporção 1:2). O JS abaixo ajusta largura/altura -->
       <canvas id="game" width="300" height="600" aria-label="tabuleiro do tetris"></canvas>
 
       <!-- Botão de início central -->
@@ -49,7 +49,7 @@
     </main>
   </div>
 
-  <!-- Controles fixos no rodapé (sempre fora do tabuleiro) -->
+  <!-- Controles fixos no rodapé (fora do tabuleiro) -->
   <nav class="card controls-dock" aria-label="Controles do jogo">
     <p class="hint">Controles de toque</p>
     <div class="controls">
@@ -62,5 +62,51 @@
   </nav>
 
   <script src="game.js"></script>
+
+  <!-- Redimensiona o canvas para ocupar TODO o espaço livre (sem invadir a dock) -->
+  <script>
+    function fitGameArea(){
+      const title = document.querySelector('.title');
+      const info  = document.querySelector('.info-panel');
+      const dock  = document.querySelector('.controls-dock');
+      const stage = document.querySelector('.stage');
+      const canvas = document.getElementById('game');
+
+      const vw = Math.min(window.innerWidth, 520); // limite da coluna
+      const vh = window.innerHeight;
+
+      // alturas ocupadas por título + info + margens/paddings aproximadas
+      const titleH = title?.getBoundingClientRect().height || 0;
+      const infoH  = info?.getBoundingClientRect().height  || 0;
+      const dockH  = dock?.getBoundingClientRect().height  || 150;
+
+      // margens internas externas aproximadas da coluna
+      const verticalGaps = 14 /* gap wrap */ + 12 /* espaço interno da stage */ + 32 /* respiro */;
+      const availableH = Math.max(200, vh - dockH - titleH - infoH - verticalGaps);
+
+      // Proporção 1:2 (largura:altura)
+      // altura desejada é o mínimo entre o disponível e 2x a largura permitida
+      const maxWidthByViewport = vw - 32;        // respira 16px de cada lado
+      const maxHeightByViewport = availableH;
+
+      // pela proporção: width = height/2   e   height = width*2
+      let targetHeight = Math.min(maxHeightByViewport, maxWidthByViewport * 2);
+      let targetWidth  = targetHeight / 2;
+
+      // limites mínimos/máximos
+      targetWidth  = Math.max(220, Math.min(360, targetWidth));
+      targetHeight = targetWidth * 2;
+
+      // aplica tamanho no CSS (não muda o buffer do canvas)
+      canvas.style.width  = targetWidth + 'px';
+      canvas.style.height = targetHeight + 'px';
+
+      // centraliza a stage
+      stage.style.maxWidth = (targetWidth + 16) + 'px';
+    }
+
+    window.addEventListener('load', fitGameArea);
+    window.addEventListener('resize', () => { requestAnimationFrame(fitGameArea); });
+  </script>
 </body>
 </html>
