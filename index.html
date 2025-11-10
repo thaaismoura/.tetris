@@ -10,35 +10,31 @@
   <div class="wrap">
     <h1 class="title">Tetris – responsivo e estiloso</h1>
 
-    <!-- Painel de informações (mesmo estilo, só menor) -->
+    <!-- Painel de informações, mais compacto e sem a frase longa -->
     <section class="card panel info-panel" aria-label="Informações do jogo">
       <h3>Info</h3>
-      <p class="tiny">Use os botões (mobile) ou o teclado: ← → ↓ mover, ↑ girar, Espaço queda.</p>
 
       <div class="stats">
         <div class="stat"><div class="k">Pontuação</div><div id="score" class="v">0</div></div>
         <div class="stat"><div class="k">Linhas</div><div id="lines" class="v">0</div></div>
         <div class="stat"><div class="k">Nível</div><div id="level" class="v">1</div></div>
-        <div class="stat"><div class="k">Veloc.</div><div id="speed" class="v">1x</div></div>
+        <div class="stat"><div class="k">Veloc.</div><div id="speed" class="v">1.0x</div></div>
       </div>
 
       <div class="next-box">
         <span class="tiny">Próxima</span>
-        <canvas id="next" class="next-canvas" width="32" height="32" aria-hidden="true"></canvas>
+        <canvas id="next" class="next-canvas" width="28" height="28" aria-hidden="true"></canvas>
       </div>
     </section>
 
     <!-- Área de jogo -->
     <main class="stage card" aria-label="Área de jogo">
-      <!-- Canvas 10x20 (proporção 1:2). O JS abaixo ajusta largura/altura -->
       <canvas id="game" width="300" height="600" aria-label="tabuleiro do tetris"></canvas>
 
-      <!-- Botão de início central -->
       <div class="overlay-center" id="overlayStart">
         <button class="start-btn" id="btnStart">Começar</button>
       </div>
 
-      <!-- Fim de jogo -->
       <div class="gameover" id="overlayGO">
         <div class="go-card">
           <h2>Fim de jogo</h2>
@@ -49,7 +45,7 @@
     </main>
   </div>
 
-  <!-- Controles fixos no rodapé (fora do tabuleiro) -->
+  <!-- Controles fora do tabuleiro -->
   <nav class="card controls-dock" aria-label="Controles do jogo">
     <p class="hint">Controles de toque</p>
     <div class="controls">
@@ -63,50 +59,54 @@
 
   <script src="game.js"></script>
 
-  <!-- Redimensiona o canvas para ocupar TODO o espaço livre (sem invadir a dock) -->
+  <!-- Ajuste de tamanho usando visualViewport (sem cortes no iPhone) -->
   <script>
-    function fitGameArea(){
+    function fitGameArea() {
+      const vv = window.visualViewport;
+      const vh = vv ? vv.height : window.innerHeight;
+      const vw = Math.min((vv ? vv.width : window.innerWidth), 520); // largura da coluna
+
       const title = document.querySelector('.title');
       const info  = document.querySelector('.info-panel');
       const dock  = document.querySelector('.controls-dock');
       const stage = document.querySelector('.stage');
       const canvas = document.getElementById('game');
 
-      const vw = Math.min(window.innerWidth, 520); // limite da coluna
-      const vh = window.innerHeight;
-
-      // alturas ocupadas por título + info + margens/paddings aproximadas
       const titleH = title?.getBoundingClientRect().height || 0;
       const infoH  = info?.getBoundingClientRect().height  || 0;
-      const dockH  = dock?.getBoundingClientRect().height  || 150;
+      const dockH  = dock?.getBoundingClientRect().height  || 130;
+      const safeBottom = Number(getComputedStyle(document.documentElement)
+        .getPropertyValue('--safe-bottom') || 0);
 
-      // margens internas externas aproximadas da coluna
-      const verticalGaps = 14 /* gap wrap */ + 12 /* espaço interno da stage */ + 32 /* respiro */;
-      const availableH = Math.max(200, vh - dockH - titleH - infoH - verticalGaps);
+      // respiros/espacamentos aproximados
+      const gaps = 10 /*margens internas*/ + 12 /*padding stage*/ + 20 /*respiro*/;
 
-      // Proporção 1:2 (largura:altura)
-      // altura desejada é o mínimo entre o disponível e 2x a largura permitida
-      const maxWidthByViewport = vw - 32;        // respira 16px de cada lado
-      const maxHeightByViewport = availableH;
+      const availableH = Math.max(220, vh - dockH - safeBottom - titleH - infoH - gaps);
 
-      // pela proporção: width = height/2   e   height = width*2
-      let targetHeight = Math.min(maxHeightByViewport, maxWidthByViewport * 2);
-      let targetWidth  = targetHeight / 2;
+      // proporção 1:2 (10x20)
+      // width = min(vw - margem, availableH/2)
+      const maxW = vw - 32;
+      let targetW = Math.min(maxW, availableH / 2);
+      // limites práticos para celulares
+      targetW = Math.max(200, Math.min(340, targetW));
+      const targetH = targetW * 2;
 
-      // limites mínimos/máximos
-      targetWidth  = Math.max(220, Math.min(360, targetWidth));
-      targetHeight = targetWidth * 2;
-
-      // aplica tamanho no CSS (não muda o buffer do canvas)
-      canvas.style.width  = targetWidth + 'px';
-      canvas.style.height = targetHeight + 'px';
-
-      // centraliza a stage
-      stage.style.maxWidth = (targetWidth + 16) + 'px';
+      canvas.style.width  = targetW + 'px';
+      canvas.style.height = targetH + 'px';
+      stage.style.maxWidth = (targetW + 16) + 'px';
     }
 
-    window.addEventListener('load', fitGameArea);
-    window.addEventListener('resize', () => { requestAnimationFrame(fitGameArea); });
+    const bind = () => {
+      fitGameArea();
+      // iOS: quando a barra some/aparece
+      if (window.visualViewport) {
+        visualViewport.addEventListener('resize', fitGameArea);
+        visualViewport.addEventListener('scroll', fitGameArea);
+      }
+      window.addEventListener('orientationchange', fitGameArea);
+      window.addEventListener('resize', fitGameArea);
+    };
+    window.addEventListener('load', bind);
   </script>
 </body>
 </html>
