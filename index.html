@@ -10,26 +10,24 @@
   <div class="wrap">
     <h1 class="title">Tetris – responsivo e estiloso</h1>
 
-    <!-- Painel de informações, mais compacto e sem a frase longa -->
+    <!-- Painel de informações (compacto, some ao iniciar o jogo) -->
     <section class="card panel info-panel" aria-label="Informações do jogo">
       <h3>Info</h3>
-
       <div class="stats">
         <div class="stat"><div class="k">Pontuação</div><div id="score" class="v">0</div></div>
         <div class="stat"><div class="k">Linhas</div><div id="lines" class="v">0</div></div>
         <div class="stat"><div class="k">Nível</div><div id="level" class="v">1</div></div>
         <div class="stat"><div class="k">Veloc.</div><div id="speed" class="v">1.0x</div></div>
       </div>
-
       <div class="next-box">
         <span class="tiny">Próxima</span>
-        <canvas id="next" class="next-canvas" width="28" height="28" aria-hidden="true"></canvas>
+        <canvas id="next" class="next-canvas" width="28" height="28"></canvas>
       </div>
     </section>
 
     <!-- Área de jogo -->
-    <main class="stage card" aria-label="Área de jogo">
-      <canvas id="game" width="300" height="600" aria-label="tabuleiro do tetris"></canvas>
+    <main class="stage card">
+      <canvas id="game" width="300" height="600"></canvas>
 
       <div class="overlay-center" id="overlayStart">
         <button class="start-btn" id="btnStart">Começar</button>
@@ -45,68 +43,80 @@
     </main>
   </div>
 
-  <!-- Controles fora do tabuleiro -->
-  <nav class="card controls-dock" aria-label="Controles do jogo">
+  <!-- Controles fixos -->
+  <nav class="card controls-dock">
     <p class="hint">Controles de toque</p>
     <div class="controls">
-      <button id="btnLeft"  class="btn-left"  aria-label="Esquerda">◀︎</button>
-      <button id="btnUp"    class="btn-up"    aria-label="Girar">⤿</button>
-      <button id="btnRight" class="btn-right" aria-label="Direita">▶︎</button>
-      <button id="btnDown"  class="btn-down"  aria-label="Descer">▼</button>
-      <button id="btnDrop"  class="btn-drop"  aria-label="Queda">Queda</button>
+      <button id="btnLeft" class="btn-left">◀︎</button>
+      <button id="btnUp" class="btn-up">⤿</button>
+      <button id="btnRight" class="btn-right">▶︎</button>
+      <button id="btnDown" class="btn-down">▼</button>
+      <button id="btnDrop" class="btn-drop">Queda</button>
     </div>
   </nav>
 
   <script src="game.js"></script>
 
-  <!-- Ajuste de tamanho usando visualViewport (sem cortes no iPhone) -->
+  <!-- Script de ajuste e modo maximizado -->
   <script>
-    function fitGameArea() {
+    function getViewport() {
       const vv = window.visualViewport;
-      const vh = vv ? vv.height : window.innerHeight;
-      const vw = Math.min((vv ? vv.width : window.innerWidth), 520); // largura da coluna
+      return { w: vv ? vv.width : window.innerWidth, h: vv ? vv.height : window.innerHeight };
+    }
 
+    function resizeCanvas() {
+      const { w: vw, h: vh } = getViewport();
+      const body = document.body;
       const title = document.querySelector('.title');
-      const info  = document.querySelector('.info-panel');
-      const dock  = document.querySelector('.controls-dock');
+      const info = document.querySelector('.info-panel');
+      const dock = document.querySelector('.controls-dock');
       const stage = document.querySelector('.stage');
       const canvas = document.getElementById('game');
 
-      const titleH = title?.getBoundingClientRect().height || 0;
-      const infoH  = info?.getBoundingClientRect().height  || 0;
-      const dockH  = dock?.getBoundingClientRect().height  || 130;
-      const safeBottom = Number(getComputedStyle(document.documentElement)
-        .getPropertyValue('--safe-bottom') || 0);
+      const titleH = title.getBoundingClientRect().height || 0;
+      const infoH = body.classList.contains('playing') ? 0 : (info?.getBoundingClientRect().height || 0);
+      const dockH = dock.getBoundingClientRect().height || 130;
+      const gaps = 24;
 
-      // respiros/espacamentos aproximados
-      const gaps = 10 /*margens internas*/ + 12 /*padding stage*/ + 20 /*respiro*/;
-
-      const availableH = Math.max(220, vh - dockH - safeBottom - titleH - infoH - gaps);
-
-      // proporção 1:2 (10x20)
-      // width = min(vw - margem, availableH/2)
-      const maxW = vw - 32;
+      const availableH = vh - (titleH + infoH + dockH + gaps);
+      const columnW = Math.min(vw, 540);
+      const maxW = columnW - 32;
       let targetW = Math.min(maxW, availableH / 2);
-      // limites práticos para celulares
-      targetW = Math.max(200, Math.min(340, targetW));
+      targetW = Math.max(220, Math.min(360, targetW));
       const targetH = targetW * 2;
 
-      canvas.style.width  = targetW + 'px';
+      canvas.style.width = targetW + 'px';
       canvas.style.height = targetH + 'px';
       stage.style.maxWidth = (targetW + 16) + 'px';
     }
 
-    const bind = () => {
-      fitGameArea();
-      // iOS: quando a barra some/aparece
+    function setupResize() {
+      resizeCanvas();
       if (window.visualViewport) {
-        visualViewport.addEventListener('resize', fitGameArea);
-        visualViewport.addEventListener('scroll', fitGameArea);
+        visualViewport.addEventListener('resize', resizeCanvas);
+        visualViewport.addEventListener('scroll', resizeCanvas);
       }
-      window.addEventListener('orientationchange', fitGameArea);
-      window.addEventListener('resize', fitGameArea);
-    };
-    window.addEventListener('load', bind);
+      window.addEventListener('resize', resizeCanvas);
+      window.addEventListener('orientationchange', resizeCanvas);
+    }
+
+    window.addEventListener('load', () => {
+      const btnStart = document.getElementById('btnStart');
+      const btnAgain = document.getElementById('btnAgain');
+
+      btnStart.addEventListener('click', () => {
+        document.body.classList.add('playing');
+        document.querySelector('.info-panel').style.display = 'none';
+        resizeCanvas();
+      });
+
+      btnAgain.addEventListener('click', () => {
+        document.getElementById('overlayGO').classList.remove('show');
+        resizeCanvas();
+      });
+
+      setupResize();
+    });
   </script>
 </body>
 </html>
