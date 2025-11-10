@@ -10,7 +10,6 @@
   <div class="wrap">
     <h1 class="title">Tetris – responsivo e estiloso</h1>
 
-    <!-- Painel de informações (aparece antes de começar e após Fim de jogo) -->
     <section class="card panel info-panel" aria-label="Informações do jogo">
       <h3>Info</h3>
       <div class="stats">
@@ -19,23 +18,19 @@
         <div class="stat"><div class="k">Nível</div><div id="level" class="v">1</div></div>
         <div class="stat"><div class="k">Veloc.</div><div id="speed" class="v">1.0x</div></div>
       </div>
-
       <div class="next-box">
         <span class="tiny">Próxima</span>
         <canvas id="next" class="next-canvas" width="28" height="28"></canvas>
       </div>
     </section>
 
-    <!-- Área de jogo -->
     <main class="stage card">
       <canvas id="game" width="300" height="600"></canvas>
 
-      <!-- Botão de início central (só antes de começar) -->
       <div class="overlay-center" id="overlayStart">
         <button class="start-btn" id="btnStart">Começar</button>
       </div>
 
-      <!-- Fim de jogo (aparece e volta a mostrar o painel de info) -->
       <div class="gameover" id="overlayGO">
         <div class="go-card">
           <h2>Fim de jogo</h2>
@@ -46,19 +41,18 @@
     </main>
   </div>
 
-  <!-- Controles fixos, menores, SEM sobrepor o jogo -->
+  <!-- Controles fixos, agora sem o texto -->
   <nav class="card controls-dock" aria-label="Controles do jogo">
-    <p class="hint">Controles de toque</p>
     <div class="controls">
-      <button id="btnLeft"  class="btn-left"  aria-label="Esquerda">◀︎</button>
-      <button id="btnUp"    class="btn-up"    aria-label="Girar">⤿</button>
+      <button id="btnLeft" class="btn-left" aria-label="Esquerda">◀︎</button>
+      <button id="btnUp" class="btn-up" aria-label="Girar">⤿</button>
       <button id="btnRight" class="btn-right" aria-label="Direita">▶︎</button>
-      <button id="btnDown"  class="btn-down"  aria-label="Descer">▼</button>
-      <button id="btnDrop"  class="btn-drop"  aria-label="Queda">Queda</button>
+      <button id="btnDown" class="btn-down" aria-label="Descer">▼</button>
+      <button id="btnDrop" class="btn-drop" aria-label="Queda">Queda</button>
+      <button id="btnSoft" class="btn-soft" aria-label="Descida suave">⬇️</button>
     </div>
   </nav>
 
-  <!-- JS principal -->
   <script src="game.js"></script>
 </body>
 </html>
