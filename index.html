@@ -10,6 +10,7 @@
   <div class="wrap">
     <h1 class="title">Tetris – responsivo e estiloso</h1>
 
+    <!-- Painel de informações (mostra antes de começar e após Fim de jogo) -->
     <section class="card panel info-panel" aria-label="Informações do jogo">
       <h3>Info</h3>
       <div class="stats">
@@ -24,13 +25,16 @@
       </div>
     </section>
 
+    <!-- Área de jogo -->
     <main class="stage card">
       <canvas id="game" width="300" height="600"></canvas>
 
+      <!-- Botão central de início / retomar -->
       <div class="overlay-center" id="overlayStart">
         <button class="start-btn" id="btnStart">Começar</button>
       </div>
 
+      <!-- Fim de jogo -->
       <div class="gameover" id="overlayGO">
         <div class="go-card">
           <h2>Fim de jogo</h2>
@@ -41,15 +45,15 @@
     </main>
   </div>
 
-  <!-- Controles fixos, agora sem o texto -->
+  <!-- Controles fixos (sem texto, com Pause à direita) -->
   <nav class="card controls-dock" aria-label="Controles do jogo">
     <div class="controls">
-      <button id="btnLeft" class="btn-left" aria-label="Esquerda">◀︎</button>
-      <button id="btnUp" class="btn-up" aria-label="Girar">⤿</button>
-      <button id="btnRight" class="btn-right" aria-label="Direita">▶︎</button>
-      <button id="btnDown" class="btn-down" aria-label="Descer">▼</button>
-      <button id="btnDrop" class="btn-drop" aria-label="Queda">Queda</button>
-      <button id="btnSoft" class="btn-soft" aria-label="Descida suave">⬇️</button>
+      <button id="btnLeft"  class="btn-left"   aria-label="Esquerda">◀︎</button>
+      <button id="btnUp"    class="btn-up"     aria-label="Girar">⤿</button>
+      <button id="btnRight" class="btn-right"  aria-label="Direita">▶︎</button>
+      <button id="btnDown"  class="btn-down"   aria-label="Descer">▼</button>
+      <button id="btnDrop"  class="btn-drop"   aria-label="Queda">Queda</button>
+      <button id="btnPause" class="btn-pause"  aria-label="Pausar">⏸</button>
     </div>
   </nav>
 
