@@ -4,58 +4,52 @@
   --muted:#8b93a7; --text:#e6e9f5;
   --shadow:0 10px 30px rgba(0,0,0,.35);
   --radius:18px;
-
-  /* altura reservada para a barra de controles (não sobrepõe o jogo) */
-  --dock-h: 150px;
+  --dock-h: 150px; /* altura aproximada da dock */
 }
 
 *{box-sizing:border-box}
 html,body{height:100%}
 body{
-  margin:0; font-family:system-ui, -apple-system, "Segoe UI", Roboto, Arial, "Noto Sans";
+  margin:0; font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,"Noto Sans";
   color:var(--text);
   background:
     radial-gradient(1200px 800px at 10% 10%, rgba(124,58,237,.18), transparent 60%),
     radial-gradient(1200px 800px at 100% 0%, rgba(14,165,233,.15), transparent 60%),
     var(--bg);
   display:flex; justify-content:center;
-
-  /* deixa espaço para a dock de controles no mobile */
-  padding:14px 16px calc(var(--dock-h) + 18px + env(safe-area-inset-bottom, 0px));
+  padding:12px 16px calc(var(--dock-h) + 14px + env(safe-area-inset-bottom,0px));
 }
 
 .wrap{
-  width:min(100%, 480px);
-  display:flex; flex-direction:column; gap:12px;
-  align-items:center;
+  width:min(100%,520px);
+  display:flex; flex-direction:column; gap:12px; align-items:center;
 }
 
 .title{
-  margin:6px 0 2px; font-size:clamp(18px,5.2vw,28px); font-weight:800;
-  text-align:center; letter-spacing:.3px;
+  margin:4px 0 0;
+  font-size:clamp(18px,5.2vw,28px);
+  font-weight:800; text-align:center; letter-spacing:.3px;
 }
 
-/* Cartões base */
 .card{
-  background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.025));
+  background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.025));
   border:1px solid rgba(255,255,255,.08);
   border-radius:var(--radius);
   box-shadow:var(--shadow);
 }
 
-/* Painel de info – mesmo estilo, só menor */
-.panel{ width:100%; padding:12px 14px }
-.panel h3{ margin:0 0 6px; font-size:14px }
-.tiny{ font-size:12px; color:var(--text); opacity:.9; margin:0 0 6px }
-.stats{ display:grid; grid-template-columns:1fr 1fr; gap:6px; margin-top:4px }
-.stat{ background:rgba(255,255,255,.03); border:1px solid rgba(255,255,255,.08);
-       padding:8px 10px; border-radius:12px; text-align:center }
-.stat .k{ font-size:11px; color:var(--muted) }
-.stat .v{ font-size:16px; font-weight:800 }
-.next-box{ margin-top:8px; display:flex; align-items:center; gap:10px }
-.next-canvas{ width:40px; height:40px; border-radius:10px; border:1px solid rgba(255,255,255,.08); background:rgba(255,255,255,.03) }
+/* Painel Info BEM compacto */
+.panel{width:100%; padding:10px 12px}
+.panel h3{margin:0 0 6px; font-size:14px}
+.tiny{font-size:12px; opacity:.9; margin:0 0 6px}
+.stats{display:grid; grid-template-columns:repeat(4, 1fr); gap:6px; margin-top:6px}
+.stat{background:rgba(255,255,255,.03); border:1px solid rgba(255,255,255,.08); padding:6px 8px; border-radius:10px; text-align:center}
+.stat .k{font-size:10.5px; color:var(--muted)}
+.stat .v{font-size:15px; font-weight:800}
+.next-box{margin-top:8px; display:flex; align-items:center; gap:8px}
+.next-canvas{width:32px; height:32px; border-radius:8px; border:1px solid rgba(255,255,255,.08); background:rgba(255,255,255,.03)}
 
-/* Área de jogo central e compacta (não sobrepõe a dock) */
+/* Área de jogo – fica no meio e recebe o tamanho via JS */
 .stage{
   position:relative; overflow:hidden; width:100%;
   display:flex; justify-content:center; align-items:center;
@@ -64,17 +58,13 @@ body{
   padding:8px;
 }
 
-/* o canvas escala por largura; altura nunca entra na dock */
-#game{
-  display:block; width:min(88vw, 320px); height:auto; image-rendering:pixelated;
-  max-height:calc(100vh - var(--dock-h) - 230px); /* 230px ≈ título + info + margens */
-  border-radius:14px;
-}
+/* Canvas recebe width/height inline pelo JS para preencher o espaço livre */
+#game{ display:block; image-rendering:pixelated; border-radius:14px }
 
-/* Botão central de início */
+/* Botão central */
 .overlay-center{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; pointer-events:none }
 .start-btn{
-  pointer-events:auto; border:none; border-radius:999px; padding:14px 22px; font-weight:900;
+  pointer-events:auto; border:none; border-radius:999px; padding:12px 20px; font-weight:900;
   background:linear-gradient(135deg, var(--accent), var(--accent-2)); color:#0b1020;
   box-shadow:0 10px 30px rgba(0,0,0,.5), 0 6px 0 rgba(0,0,0,.25);
   font-size:16px; cursor:pointer;
@@ -84,13 +74,13 @@ body{
 .gameover{ pointer-events:none; position:absolute; inset:0; display:flex; align-items:center; justify-content:center; opacity:0;
   background: radial-gradient(400px 260px at 50% 40%, rgba(0,0,0,.55), rgba(0,0,0,.8)); transition:opacity .25s }
 .gameover.show{ opacity:1 }
-.go-card{ background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.1); padding:16px 18px; border-radius:16px; text-align:center }
+.go-card{ background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.1); padding:14px 16px; border-radius:16px; text-align:center }
 .go-card .again{ border:none; border-radius:999px; padding:10px 18px; font-weight:900; background:linear-gradient(135deg,var(--accent),var(--accent-2)); color:#0b1020; cursor:pointer }
 
-/* -------- Dock de controles (fora do jogo) -------- */
+/* Dock de controles (fora do jogo) */
 .controls-dock{
   position:fixed; left:12px; right:12px;
-  bottom:calc(10px + env(safe-area-inset-bottom, 0px));
+  bottom:calc(10px + env(safe-area-inset-bottom,0px));
   height:var(--dock-h);
   padding:8px 10px; z-index:50;
   backdrop-filter: blur(6px);
@@ -98,27 +88,24 @@ body{
 }
 .hint{ margin:0; text-align:center; font-size:12px; color:var(--muted) }
 
-/* grade dos botões */
 .controls{
   height:calc(100% - 24px);
   display:grid; grid-template-areas:
-    ". up ."
-    "left drop right"
-    ". down .";
+  ". up ."
+  "left drop right"
+  ". down .";
   gap:8px; justify-items:center; align-items:center; padding:6px 0;
 }
 .controls button{
-  width:100%; max-width:100px; height:50px;
-  font-size:17px; font-weight:800;
+  width:100%; max-width:96px; height:48px;
+  font-size:16px; font-weight:800;
   border:none; border-radius:14px; cursor:pointer;
   background:linear-gradient(135deg, rgba(125,211,252,.25), rgba(167,139,250,.25));
   border:1px solid rgba(255,255,255,.12); color:var(--text); box-shadow:var(--shadow);
 }
 .btn-up{grid-area:up} .btn-left{grid-area:left} .btn-right{grid-area:right} .btn-down{grid-area:down} .btn-drop{grid-area:drop}
 
-/* Desktop: mantém coluna, só dá um respiro */
+/* Desktop continua em coluna (mobile-first) */
 @media (min-width: 800px){
-  body{ padding-left:32px; padding-right:32px }
-  .wrap{ width:min(100%, 520px) }
-  #game{ width:320px }
+  .wrap{ width:min(100%, 540px) }
 }
