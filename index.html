@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
   <title>Tetris Responsivo – Visual Canva-style</title>
   <link rel="stylesheet" href="styles.css">
 </head>
@@ -25,10 +25,15 @@
 
       <!-- Área de jogo -->
       <main class="stage card" aria-label="Área de jogo">
+        <!-- canvas 10x20 em 30px => 300x600, escala por CSS mantém proporção -->
         <canvas id="game" width="300" height="600" aria-label="tabuleiro do tetris"></canvas>
+
+        <!-- Botão central que some ao iniciar -->
         <div class="overlay-center" id="overlayStart">
           <button class="start-btn" id="btnStart">Começar</button>
         </div>
+
+        <!-- Fim de jogo -->
         <div class="gameover" id="overlayGO">
           <div class="go-card">
             <h2>Fim de jogo</h2>
@@ -60,9 +65,6 @@
       </div>
     </div>
   </div>
-   <footer class="app-footer">
-    <small>© <span id="year"></span> Direitos autorais <strong>Thaís Moura</strong>. Todos os direitos reservados.</small>
-    </footer>
 
   <script src="game.js"></script>
 </body>
