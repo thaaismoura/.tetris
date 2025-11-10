@@ -3,65 +3,63 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-  <title>Tetris Responsivo – Visual Canva-style</title>
-  <link rel="stylesheet" href="styles.css">
+  <title>Tetris – responsivo e estiloso</title>
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
   <div class="wrap">
-    <div class="title"><h1>Tetris – responsivo e estiloso</h1></div>
+    <h1 class="title">Tetris – responsivo e estiloso</h1>
 
-    <div class="grid">
-      <!-- Painel esquerdo (menor) -->
-      <aside class="card panel info-panel" aria-label="Informações do jogo">
-        <h3>Info</h3>
-        <div class="tiny">Use os botões (mobile) ou o teclado: ← → ↓ mover, ↑ girar, Espaço queda.</div>
-        <div class="stats" style="margin-top:8px">
-          <div class="stat"><div class="k">Pontuação</div><div id="score" class="v">0</div></div>
-          <div class="stat"><div class="k">Linhas</div><div id="lines" class="v">0</div></div>
-          <div class="stat"><div class="k">Nível</div><div id="level" class="v">1</div></div>
-          <div class="stat"><div class="k">Veloc.</div><div id="speed" class="v">1x</div></div>
+    <!-- Painel de informações (igual estilo, só menor) -->
+    <section class="card panel info-panel" aria-label="Informações do jogo">
+      <h3>Info</h3>
+      <p class="tiny">Use os botões (mobile) ou o teclado: ← → ↓ mover, ↑ girar, Espaço queda.</p>
+
+      <div class="stats">
+        <div class="stat"><div class="k">Pontuação</div><div id="score" class="v">0</div></div>
+        <div class="stat"><div class="k">Linhas</div><div id="lines" class="v">0</div></div>
+        <div class="stat"><div class="k">Nível</div><div id="level" class="v">1</div></div>
+        <div class="stat"><div class="k">Veloc.</div><div id="speed" class="v">1x</div></div>
+      </div>
+
+      <div class="next-box">
+        <span class="tiny">Próxima</span>
+        <canvas id="next" class="next-canvas" width="40" height="40" aria-hidden="true"></canvas>
+      </div>
+    </section>
+
+    <!-- Área de jogo -->
+    <main class="stage card" aria-label="Área de jogo">
+      <!-- Canvas 10x20 (300x600). O CSS escala mantendo proporção -->
+      <canvas id="game" width="300" height="600" aria-label="tabuleiro do tetris"></canvas>
+
+      <!-- Botão de início central -->
+      <div class="overlay-center" id="overlayStart">
+        <button class="start-btn" id="btnStart">Começar</button>
+      </div>
+
+      <!-- Fim de jogo -->
+      <div class="gameover" id="overlayGO">
+        <div class="go-card">
+          <h2>Fim de jogo</h2>
+          <p>Sua pilha alcançou o topo.</p>
+          <button class="again" id="btnAgain">Jogar de novo</button>
         </div>
-      </aside>
-
-      <!-- Área de jogo -->
-      <main class="stage card" aria-label="Área de jogo">
-        <canvas id="game" width="300" height="600" aria-label="tabuleiro do tetris"></canvas>
-
-        <div class="overlay-center" id="overlayStart">
-          <button class="start-btn" id="btnStart">Começar</button>
-        </div>
-
-        <div class="gameover" id="overlayGO">
-          <div class="go-card">
-            <h2>Fim de jogo</h2>
-            <p>Sua pilha alcançou o topo.</p>
-            <button class="again" id="btnAgain">Jogar de novo</button>
-          </div>
-        </div>
-      </main>
-
-      <!-- Próxima peça (bem pequena) -->
-      <aside class="card panel" aria-label="Próxima peça">
-        <h3>Próxima</h3>
-        <div class="next-wrap">
-          <canvas id="next" class="next-canvas" width="40" height="40"></canvas>
-          <div class="tiny">Pré-visualização mini</div>
-        </div>
-      </aside>
-    </div>
+      </div>
+    </main>
   </div>
 
-  <!-- Controles fixos no rodapé (fora da área de jogo) -->
-  <div class="card controls-dock">
-    <div class="hint">Controles de toque</div>
+  <!-- Controles fixos no rodapé (sempre fora do tabuleiro) -->
+  <nav class="card controls-dock" aria-label="Controles do jogo">
+    <p class="hint">Controles de toque</p>
     <div class="controls">
-      <button id="btnLeft"  class="btn-left">◀︎</button>
-      <button id="btnUp"    class="btn-up">⤿</button>
-      <button id="btnRight" class="btn-right">▶︎</button>
-      <button id="btnDown"  class="btn-down">▼</button>
-      <button id="btnDrop"  class="btn-drop">Queda</button>
+      <button id="btnLeft"  class="btn-left"  aria-label="Esquerda">◀︎</button>
+      <button id="btnUp"    class="btn-up"    aria-label="Girar">⤿</button>
+      <button id="btnRight" class="btn-right" aria-label="Direita">▶︎</button>
+      <button id="btnDown"  class="btn-down"  aria-label="Descer">▼</button>
+      <button id="btnDrop"  class="btn-drop"  aria-label="Queda">Queda</button>
     </div>
-  </div>
+  </nav>
 
   <script src="game.js"></script>
 </body>
