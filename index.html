@@ -11,11 +11,11 @@
     <div class="title"><h1>Tetris – responsivo e estiloso</h1></div>
 
     <div class="grid">
-      <!-- Painel esquerdo -->
-      <aside class="card panel" aria-label="Informações do jogo">
+      <!-- Painel esquerdo (menor) -->
+      <aside class="card panel info-panel" aria-label="Informações do jogo">
         <h3>Info</h3>
         <div class="tiny">Use os botões (mobile) ou o teclado: ← → ↓ mover, ↑ girar, Espaço queda.</div>
-        <div class="stats" style="margin-top:10px">
+        <div class="stats" style="margin-top:8px">
           <div class="stat"><div class="k">Pontuação</div><div id="score" class="v">0</div></div>
           <div class="stat"><div class="k">Linhas</div><div id="lines" class="v">0</div></div>
           <div class="stat"><div class="k">Nível</div><div id="level" class="v">1</div></div>
@@ -27,12 +27,10 @@
       <main class="stage card" aria-label="Área de jogo">
         <canvas id="game" width="300" height="600" aria-label="tabuleiro do tetris"></canvas>
 
-        <!-- Botão central que some ao iniciar -->
         <div class="overlay-center" id="overlayStart">
           <button class="start-btn" id="btnStart">Começar</button>
         </div>
 
-        <!-- Fim de jogo -->
         <div class="gameover" id="overlayGO">
           <div class="go-card">
             <h2>Fim de jogo</h2>
@@ -42,19 +40,18 @@
         </div>
       </main>
 
-      <!-- Painel direito -->
+      <!-- Próxima peça (bem pequena) -->
       <aside class="card panel" aria-label="Próxima peça">
         <h3>Próxima</h3>
         <div class="next-wrap">
-          <!-- menor agora -->
-          <canvas id="next" class="next-canvas" width="48" height="48"></canvas>
+          <canvas id="next" class="next-canvas" width="40" height="40"></canvas>
           <div class="tiny">Pré-visualização mini</div>
         </div>
       </aside>
     </div>
   </div>
 
-  <!-- Controles fixos no rodapé -->
+  <!-- Controles fixos no rodapé (fora da área de jogo) -->
   <div class="card controls-dock">
     <div class="hint">Controles de toque</div>
     <div class="controls">
